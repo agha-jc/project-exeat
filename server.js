@@ -1,10 +1,26 @@
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = '0.0.0.0';
 const port = process.env.PORT || 3000;
+
+// Check if .next directory exists, if not build it
+const nextDir = path.join(__dirname, '.next');
+if (!fs.existsSync(nextDir)) {
+    console.log('> Building application...');
+    try {
+        execSync('npm run build', { stdio: 'inherit' });
+        console.log('> Build completed successfully');
+    } catch (error) {
+        console.error('> Build failed:', error.message);
+        process.exit(1);
+    }
+}
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
