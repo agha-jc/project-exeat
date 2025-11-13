@@ -14,7 +14,7 @@ const nextDir = path.join(__dirname, '.next');
 if (!fs.existsSync(nextDir)) {
     console.log('> Building application...');
     try {
-        execSync('npm run build', { stdio: 'inherit' });
+        execSync('npx next build', { stdio: 'inherit', cwd: __dirname });
         console.log('> Build completed successfully');
     } catch (error) {
         console.error('> Build failed:', error.message);
