@@ -14,7 +14,15 @@ const nextDir = path.join(__dirname, '.next');
 if (!fs.existsSync(nextDir)) {
     console.log('> Building application...');
     try {
-        execSync('npx next build', { stdio: 'inherit', cwd: __dirname });
+        // Prefer the extracted global node_modules bin path that Azure uses
+        const localNext = '/node_modules/.bin/next';
+        if (fs.existsSync(localNext)) {
+            execSync(`${localNext} build`, { stdio: 'inherit', cwd: __dirname });
+        } else {
+            // Fallback to npx if the direct binary isn't present in the expected location
+            execSync('npx next build', { stdio: 'inherit', cwd: __dirname });
+        }
+
         console.log('> Build completed successfully');
     } catch (error) {
         console.error('> Build failed:', error.message);
