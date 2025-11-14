@@ -5,9 +5,9 @@
 "scripts": {
   "dev": "next dev",
   "build": "next build",
-  "start": "node server.js",
-  "postinstall": "next build"
+  "start": "next start"
 }
+
 ,
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
