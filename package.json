@@ -5,9 +5,10 @@
 "scripts": {
   "dev": "next dev",
   "build": "next build",
-  "start": "next start -p ${PORT:-3000}"
+  "start": "next start -p ${PORT:-3000}",
+  "postinstall": "next build"
   },
-   
+
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@next/swc-wasm-nodejs": "13.5.1",
