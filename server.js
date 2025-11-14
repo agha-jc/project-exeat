@@ -11,9 +11,9 @@ const port = process.env.PORT || 3000;
 // Check if .next directory exists, if not build it programmatically
 const nextDir = path.join(__dirname, '.next');
 if (!fs.existsSync(nextDir)) {
-    console.log('> Building application using Next.js API...');
-    const { build } = require('next/dist/build');
+    console.log('> Building application using Next.js build...');
     try {
+        const build = require('next/dist/build').default;
         build(process.cwd()).then(() => {
             console.log('> Build completed successfully');
             startServer();
@@ -22,8 +22,21 @@ if (!fs.existsSync(nextDir)) {
             process.exit(1);
         });
     } catch (error) {
-        console.error('> Build failed:', error);
-        process.exit(1);
+        console.error('> Build import failed, trying alternative method...');
+        // Fallback: require next and use its internal build
+        try {
+            const NextBuild = require('next/dist/build/index').default;
+            NextBuild(process.cwd()).then(() => {
+                console.log('> Build completed successfully');
+                startServer();
+            }).catch((err) => {
+                console.error('> Build failed:', err);
+                process.exit(1);
+            });
+        } catch (innerError) {
+            console.error('> All build methods failed. Exiting.');
+            process.exit(1);
+        }
     }
 } else {
     startServer();
