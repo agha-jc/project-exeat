@@ -10,28 +10,28 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read  # Only contents read; do NOT include id-token
+      contents: read  # Only need read access; do NOT include id-token
 
     steps:
-      - name: Checkout code
+      - name: Checkout the repository code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js 20.x
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
-      - name: Install dependencies and build Next.js
+      - name: Install npm dependencies and build Next.js
         run: |
           npm install
           npm run build
 
-      - name: Login to Azure
+      - name: Login to Azure with service principal
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Web App
+      - name: Deploy built app to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'veritas-frontend2'
